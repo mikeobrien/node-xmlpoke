@@ -1,0 +1,46 @@
+{
+  "name": "xmlpoke",
+  "version": "0.1.0",
+  "description": "Module for modifying XML files.",
+  "homepage": "https://github.com/mikeobrien/node-xmlpoke",
+  "main": "src/xmlpoke.js",
+  "bugs": {
+    "url": "https://github.com/mikeobrien/node-xmlpoke/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikeobrien/node-xmlpoke.git"
+  },
+  "keywords": [
+    "xmlpoke",
+    "xml"
+  ],
+  "scripts": {
+    "test": "gulp"
+  },
+  "author": "Mike O'Brien",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "files": [
+    "src/*.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "cases": "^0.1.1",
+    "chai": "^1.10.0",
+    "gulp": "~3.8.10",
+    "gulp-filter": "~1.0.2",
+    "gulp-jshint": "~1.9.0",
+    "gulp-mocha": "~1.1.1",
+    "temp": "^0.8.1",
+    "touch": "0.0.3"
+  },
+  "dependencies": {
+    "glob": "^4.2.1",
+    "lodash": "^2.4.1",
+    "underscore.string": "^2.4.0",
+    "xmldom": "^0.1.19",
+    "xpath": "0.0.7"
+  }
+}
