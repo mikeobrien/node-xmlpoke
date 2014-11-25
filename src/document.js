@@ -1,6 +1,7 @@
 "use strict";
 
 var fs = require('fs'),
+    Args = require('./args'),
     xmldom = require('xmldom'),
     xmlParser = new xmldom.DOMParser(),
     xmlSerializer = new xmldom.XMLSerializer(),
@@ -31,7 +32,7 @@ function setNodeValues(namespaces, nodes, value) {
             else set(xml.getChildElementsNamed(namespaces, nodes, name), value);
         });
     }
-};
+}
 
 function createNodes(query, path, errorOnNoMatches) {
     var child = xml.parseXPath(path);
@@ -99,6 +100,13 @@ function loadXml(source) {
             errorOnNoMatches, addIfMissing);
     }
 
+    var setValues = function(values, namespaces, errorOnNoMatches, addIfMissing) { 
+        _.forOwn(values, function(value, path) { 
+            setNodeValues(namespaces, query(path, 
+                errorOnNoMatches, addIfMissing), value); 
+        });
+    }
+
     var dsl = {
 
         withBasePath: function(path) {
@@ -127,15 +135,13 @@ function loadXml(source) {
             return dsl;
         },
 
-        set: function(path, value) {
-            setNodeValues(namespaces, query(path, 
-                errorOnNoMatches, false), value);
+        set: function() {
+            setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, false);
             return dsl;
         },
 
-        setOrAdd: function(path, value) {
-            setNodeValues(namespaces, query(path, 
-                errorOnNoMatches, true), value);
+        setOrAdd: function() {
+            setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, true);
             return dsl;
         },
 

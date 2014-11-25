@@ -1,13 +1,14 @@
 "use strict";
 
 var paths = require('./paths'),
+    Args = require('./args'),
     Document = require('./document'),
     _ = require('lodash');
 
 module.exports = function() {
-    var args = _.toArray(arguments);
-    var modify = args.pop();
-    var files = paths.expand.apply(null, args);
+    var args = Args(arguments);
+    var modify = args.last();
+    var files = args.applyLeading(paths.expand);
 
     files.forEach(function(file) {
         var document = Document.open(file.path);

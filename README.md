@@ -102,12 +102,18 @@ The `errorOnNoMatches` option *does not* cause this method to throw an exception
 
 ##### Setting Values and Content
 
-You can set the values or content of all matching nodes with the `set()` and `setOrAdd()` methods. Both of these methods take an XPath and a value:
+You can set the values or content of all matching nodes with the `set()` and `setOrAdd()` methods. Both of these methods take an XPath and a value or an object with XPath and value properties:
+
+`set([xpath, value]|[object])`
+
+`setOrAdd([xpath, value]|[object])`
 
 ```js
 xmlpoke('**/*.config', function(xml) { 
     xml.set('some/path', 'value')
-       .setOrAdd('some/path', 'value');
+       .setOrAdd('some/path', 'value')
+       .set({ 'first/path': 'value1', 'second/path': 'value2' })
+       .setOrAdd({ 'first/path': 'value1', 'second/path': 'value2' });
 });
 ```
 
@@ -122,7 +128,7 @@ setOrAdd("el1/el2[@attr1='value1'][@attr2='value2']", 'value3')
     // <el1/> --> <el1><el2 attr1="value1" attr2="value2">value3</el2></el1>
 ```
 
-Both these methods can take a string value, CData, raw xml, function or an object containing multiple attribute and element values.
+Values can be strings, CData, raw xml, a function or an object containing multiple attribute and element values. For example:
 
 ```js
 xmlpoke('**/*.config', function(xml) { 
@@ -139,14 +145,30 @@ xmlpoke('**/*.config', function(xml) {
     // Function
     xml.set('some/path', function(node, value) { return 'value'; });
 
-    // Object with element and attribute values
+    // XPath and object with element and attribute values
     xml.set('some/path', {
         '@attr': 'value',
         el1: 'value',
         el2: xml.CDataValue('value'),
-        el3: xml.XmlString('<el attr="value">hai</el>'),
+        el3: xml.XmlString('<el attr="oh">hai</el>'),
         el4: function(node, value) { return 'value'; }
     });
+
+    // Object
+    xml.set({
+        'some/path/@attr': 'value',
+        'some/path/el1': 'value',
+        'some/path/el2': xml.CDataValue('value'),
+        'some/path/el3': xml.XmlString('<el attr="value">hai</el>'),
+        'some/path/el4': function(node, value) { return 'value'; },
+        'some/path/el5': {
+                '@attr': 'value',
+                el1: 'value',
+                el2: xml.CDataValue('value'),
+                el3: xml.XmlString('<el attr="oh">hai</el>'),
+                el4: function(node, value) { return 'value'; }
+            }
+        å});
 });
 ```
 

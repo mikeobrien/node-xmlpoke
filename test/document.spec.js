@@ -1,7 +1,6 @@
 "use strict";
 
 var expect = require('chai').expect,
-    cases = require('cases'),
     temp = require('temp').track(),
     fs = require('fs'),
     Document = require('../src/document');
@@ -76,6 +75,16 @@ describe('document', function() {
                     .withBasePath('a')
                     .set('b', 'c').toString())
                     .to.equal('<a><b>c</b></a>');
+            });
+            
+        });
+
+        describe('object values', function() {
+
+            it('should add multiple', function() {
+                expect(Document.load('<a><b/><c/></a>')
+                    .set({ 'a/b': 'd', 'a/c': 'e' }).toString())
+                    .to.equal('<a><b>d</b><c>e</c></a>');
             });
             
         });
@@ -262,6 +271,16 @@ describe('document', function() {
                     .to.equal('<a><b>c</b></a>');
             });
 
+        });
+
+        describe('object values', function() {
+
+            it('should add multiple', function() {
+                expect(Document.load('<a/>')
+                    .setOrAdd({ 'a/b': 'd', 'a/c': 'e' }).toString())
+                    .to.equal('<a><b>d</b><c>e</c></a>');
+            });
+            
         });
 
         describe('missing elements', function() {
