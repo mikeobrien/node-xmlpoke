@@ -57,7 +57,7 @@ function joinXPath(path1, path2) {
 
 function mapNamespaces(name, pathNamespaces, parent) {
     var nameParts = name.split(':');
-    if (name.length == 1) return name;
+    if (nameParts.length == 1) return name;
     var prefix = parent.lookupPrefix(pathNamespaces[nameParts[0]]);
     return (prefix ? prefix + ':' : '') + nameParts[1];
 }

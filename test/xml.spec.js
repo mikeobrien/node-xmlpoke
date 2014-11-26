@@ -89,11 +89,11 @@ describe('xml', function() {
     }));
 
     it('should map namespaces', cases([
-        [ '<a xmlns="uri:yada"/>', 'b' ],
-        [ '<a xmlns:z="uri:yada"/>', 'z:b' ]
+        [ '<el xmlns="uri:yada"/>', 'attr' ],
+        [ '<el xmlns:z="uri:yada"/>', 'z:attr' ]
     ], function (source, name) {
         var parent = xmlParser.parseFromString(source).firstChild;
-        expect(xml.mapNamespaces('x:b', { x: 'uri:yada' }, parent)).to.equal(name);
+        expect(xml.mapNamespaces('x:attr', { x: 'uri:yada' }, parent)).to.equal(name);
     }));
 
     it('should clear children', function () {
