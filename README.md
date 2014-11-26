@@ -172,6 +172,18 @@ xmlpoke('**/*.config', function(xml) {
 });
 ```
 
+The `CDataValue()` and `XmlString()` methods exposed by the DSL are simply convenience methods for creating `CDataValue` and `XmlString` objects. These constructors are defined on the module and can be created directly as follows:
+
+```js
+var cdata = new xmlpoke.CDataValue('value');
+var xmlstring = new xmlpoke.XmlString('<el attr="value">hai</el>');
+
+xmlpoke('**/*.config', function(xml) { 
+    xml.set('some/path', cdata);
+    xml.set('some/path', xmlstring);
+});
+```
+
 #### Options
 
 ##### Base XPath

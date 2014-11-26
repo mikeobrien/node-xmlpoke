@@ -16,3 +16,6 @@ module.exports = function() {
         document.save();
     });
 };
+
+module.exports.XmlString = Document.XmlString;
+module.exports.CDataValue = Document.CDataValue;

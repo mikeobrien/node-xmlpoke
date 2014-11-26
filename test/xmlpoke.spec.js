@@ -91,10 +91,40 @@ describe('xmlpoke', function() {
 
     });
 
+    it('should poke files with cdata outside dsl', function() {
+
+        var cdata = new xmlpoke.CDataValue('c')
+
+        xmlpoke(path.join(basePath, '**/a.*'), function(xml) {
+            xml.set('a/b', cdata);
+        });
+
+        expect(fs.readFileSync(fileAPath).toString()).to.equal('<a><b><![CDATA[c]]></b></a>');
+        expect(fs.readFileSync(fileBPath).toString()).to.equal('<a><b/></a>');
+        expect(fs.readFileSync(fileDirAPath).toString()).to.equal('<a><b><![CDATA[c]]></b></a>');
+        expect(fs.readFileSync(fileDirBPath).toString()).to.equal('<a><b/></a>');
+
+    });
+
     it('should poke files with xml', function() {
 
         xmlpoke(path.join(basePath, '**/a.*'), function(xml) {
             xml.set('a/b', xml.XmlString('<c/>'));
+        });
+
+        expect(fs.readFileSync(fileAPath).toString()).to.equal('<a><b><c/></b></a>');
+        expect(fs.readFileSync(fileBPath).toString()).to.equal('<a><b/></a>');
+        expect(fs.readFileSync(fileDirAPath).toString()).to.equal('<a><b><c/></b></a>');
+        expect(fs.readFileSync(fileDirBPath).toString()).to.equal('<a><b/></a>');
+
+    });
+
+    it('should poke files with xml outside dsl', function() {
+
+        var xmlstring = new xmlpoke.XmlString('<c/>');
+
+        xmlpoke(path.join(basePath, '**/a.*'), function(xml) {
+            xml.set('a/b', xmlstring);
         });
 
         expect(fs.readFileSync(fileAPath).toString()).to.equal('<a><b><c/></b></a>');
