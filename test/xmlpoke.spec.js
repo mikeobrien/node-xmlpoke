@@ -134,4 +134,14 @@ describe('xmlpoke', function() {
 
     });
 
+    it('should poke string', function() {
+
+        var xml = xmlpoke('<a/>', function(xml) {
+            xml.set('a', 'b');
+        });
+
+        expect(xml).to.equal('<a>b</a>');
+
+    });
+
 });

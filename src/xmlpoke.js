@@ -8,13 +8,23 @@ var paths = require('./paths'),
 module.exports = function() {
     var args = Args(arguments);
     var modify = args.last();
-    var files = args.applyLeading(paths.expand);
 
-    files.forEach(function(file) {
-        var document = Document.open(file.path);
-        modify(document, file.context);
-        document.save();
-    });
+    if (_.startsWith(_.trim(args.first()), '<'))
+    {
+        var document = Document.load(args.first());
+        modify(document, {});
+        return document.toString();
+    }
+    else
+    {
+        var files = args.applyLeading(paths.expand);
+
+        files.forEach(function(file) {
+            var document = Document.open(file.path);
+            modify(document, file.context);
+            document.save();
+        });
+    }
 };
 
 module.exports.XmlString = Document.XmlString;

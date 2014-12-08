@@ -5,6 +5,7 @@ var _ = require('lodash');
 module.exports = function (args) {
     args = _.toArray(args);
     return {
+        first: function() { return _.first(args); },
         last: function() { return _.last(args); },
         applyLeading: function(func) { 
             return args.length < 2 ? func() :

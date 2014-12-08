@@ -16,6 +16,10 @@ The xmlpoke module exports a function that modifies xml files:
 
 `xmlpoke(path1, [path2], [...], [pathMap], modify)`
 
+Or allows you to modify an xml string:
+
+`xmlpoke(xml, modify)`
+
 #### Paths
 
 Paths are [globs](https://github.com/isaacs/node-glob) and can be any combination of strings, objects with a property that contains the path, or arrays of those. By default, objects are assumed to have a `path` property (Although this can be overridden). Here are some examples of valid path input: 
@@ -57,6 +61,10 @@ The last argument is a function that performs the modifications. This function i
 ```js
 xmlpoke('**/*.config', function(xml) { 
     xml.set('data/connString', 'server=oh;db=hai');
+});
+
+var xml = xmlpoke('<oh/>', function(xml) { 
+    xml.set('oh', 'hai');
 });
 ```
 
