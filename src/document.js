@@ -61,7 +61,9 @@ function buildQuery(document, namespaces) {
     };
 }
 
-function queryNodes(query, path, errorOnNoMatches, addIfMissing) {
+function queryNodes(query, path, errorOnNoMatches, addIfMissing, alwaysAdd) {
+
+    if (alwaysAdd) return createNodes(query, path, errorOnNoMatches);
 
     var nodes = query.getNodes(path);
 
@@ -93,17 +95,17 @@ function loadXml(source) {
     var document = xmlParser.parseFromString(source)
     var basePath, namespaces, errorOnNoMatches;
 
-    var query = function(path, errorOnNoMatches, addIfMissing) {
+    var query = function(path, errorOnNoMatches, addIfMissing, alwaysAdd) {
         return queryNodes(
             buildQuery(document, namespaces), 
             xml.joinXPath(basePath, path), 
-            errorOnNoMatches, addIfMissing);
+            errorOnNoMatches, addIfMissing, alwaysAdd);
     }
 
-    var setValues = function(values, namespaces, errorOnNoMatches, addIfMissing) { 
+    var setValues = function(values, namespaces, errorOnNoMatches, addIfMissing, alwaysAdd) { 
         _.forOwn(values, function(value, path) { 
             setNodeValues(namespaces, query(path, 
-                errorOnNoMatches, addIfMissing), value); 
+                errorOnNoMatches, addIfMissing, alwaysAdd), value); 
         });
     }
 
@@ -126,22 +128,27 @@ function loadXml(source) {
         },
 
         clear: function(path) {
-            clearNodes(query(path, errorOnNoMatches, false));
+            clearNodes(query(path, errorOnNoMatches));
             return dsl;
         },
 
         remove: function(path) {
-            removeNodes(query(path, false, false));
+            removeNodes(query(path));
             return dsl;
         },
 
         set: function() {
-            setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, false);
+            setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, false, false);
+            return dsl;
+        },
+
+        add: function() {
+            setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, true, true);
             return dsl;
         },
 
         setOrAdd: function() {
-            setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, true);
+            setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, true, false);
             return dsl;
         },
 

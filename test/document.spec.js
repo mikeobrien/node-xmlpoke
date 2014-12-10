@@ -260,6 +260,200 @@ describe('document', function() {
 
     });
 
+    describe('add', function() {
+
+        describe('base path', function() {
+
+            it('should add base path when configured', function() {
+                expect(Document.load('<a><b/></a>')
+                    .withBasePath('a')
+                    .add('b', 'c').toString())
+                    .to.equal('<a><b/><b>c</b></a>');
+            });
+            
+        });
+
+        describe('object values', function() {
+
+            it('should add multiple', function() {
+                expect(Document.load('<a><b/><c/></a>')
+                    .add({ 'a/b': 'd', 'a/c': 'e' }).toString())
+                    .to.equal('<a><b/><c/><b>d</b><c>e</c></a>');
+            });
+            
+        });
+
+        describe('missing elements', function() {
+
+            it('should not fail to set missing value by default', function() {
+                expect(function() { Document.load('<a/>').add('a/b/c', 'c'); })
+                    .not.to.throw();
+            });
+
+            it('should fail to set missing value when configured', function() {
+                expect(function() { 
+                        Document.load('<a/>')
+                            .errorOnNoMatches()
+                            .add('a/b/c', 'c'); })
+                    .to.throw('No matching nodes for xpath \'a/b\'.');
+            });
+
+        });
+
+        describe('namespaces', function() {
+
+            it('should set node value with default namespace when configured', function() {
+                expect(Document.load('<a xmlns="uri:yada"><b/></a>')
+                    .addNamespace('z', 'uri:yada')
+                    .add('/z:a/z:b', 'c').toString())
+                    .to.equal('<a xmlns="uri:yada"><b/><b>c</b></a>');
+            });
+
+            it('should set attribute value with default namespace when configured', function() {
+                expect(Document.load('<a xmlns="uri:yada" />')
+                    .addNamespace('z', 'uri:yada')
+                    .add('/z:a/@b', 'c').toString())
+                    .to.equal('<a xmlns="uri:yada" b="c"/>');
+            });
+
+            it('should set node value with namespace when configured', function() {
+                expect(Document.load('<a xmlns:x="uri:yada"><x:b/></a>')
+                    .addNamespace('z', 'uri:yada')
+                    .add('a/z:b', 'c').toString())
+                    .to.equal('<a xmlns:x="uri:yada"><x:b/><x:b>c</x:b></a>');
+            });
+
+            it('should set attribute value with namespace when configured', function() {
+                expect(Document.load('<a xmlns:x="uri:yada" />')
+                    .addNamespace('z', 'uri:yada')
+                    .add('a/@z:b', 'c').toString())
+                    .to.equal('<a xmlns:x="uri:yada" x:b="c"/>');
+            });
+ 
+        });
+
+        describe('string', function() {
+
+            it('should set attribute value', function() {
+                expect(Document.load('<a/>')
+                    .add('a/@b', 'c').toString())
+                    .to.equal('<a b="c"/>');
+            });
+
+            it('should set node value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', 'c').toString())
+                    .to.equal('<a><b/><b>c</b></a>');
+            });
+
+            it('should set node cdata value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', new Document.CDataValue('c')).toString())
+                    .to.equal('<a><b/><b><![CDATA[c]]></b></a>');
+            });
+
+            it('should set node xml value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', new Document.XmlString('<c/>')).toString())
+                    .to.equal('<a><b/><b><c/></b></a>');
+            });
+            
+        });
+
+        describe('function', function() {
+
+            it('should set attribute value', function() {
+                expect(Document.load('<a/>')
+                    .add('a/@b', function(node, value) { 
+                        return [ node.nodeName, value, 'c' ].join('-'); }).toString())
+                    .to.equal('<a b="b--c"/>');
+            });
+
+            it('should set node value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', function(node, value) { 
+                        return [ node.nodeName, value, 'c' ].join('-'); }).toString())
+                    .to.equal('<a><b/><b>b--c</b></a>');
+            });
+
+            it('should set node cdata value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', function(node, value) { 
+                        return new Document.CDataValue([ node.nodeName, value, 'c' ].join('-')); }).toString())
+                    .to.equal('<a><b/><b><![CDATA[b--c]]></b></a>');
+            });
+
+            it('should set node xml value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', function(node, value) { 
+                        return new Document.XmlString('<' + node.nodeName + '>' + value + '</' + node.nodeName + '>'); }).toString())
+                    .to.equal('<a><b/><b><b/></b></a>');
+            });
+            
+        });
+
+        describe('object string', function() {
+
+            it('should set attribute value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { '@c': 'd' }).toString())
+                    .to.equal('<a><b/><b c="d"/></a>');
+            });
+
+            it('should set node value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { c: 'd' }).toString())
+                    .to.equal('<a><b/><b><c>d</c></b></a>');
+            });
+
+            it('should set node cdata value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { c: new Document.CDataValue('d') }).toString())
+                    .to.equal('<a><b/><b><c><![CDATA[d]]></c></b></a>');
+            });
+
+            it('should set node sql value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { c: new Document.XmlString('<d/>') }).toString())
+                    .to.equal('<a><b/><b><c><d/></c></b></a>');
+            });
+            
+        });
+
+        describe('object function', function() {
+
+            it('should set attribute value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { '@c': function(node, value) { 
+                        return [ node.nodeName, value, 'd' ].join('-'); } }).toString())
+                    .to.equal('<a><b/><b c="c--d"/></a>');
+            });
+
+            it('should set node value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { c: function(node, value) { 
+                        return [ node.nodeName, value, 'd' ].join('-'); } }).toString())
+                    .to.equal('<a><b/><b><c>c--d</c></b></a>');
+            });
+
+            it('should set node cdata value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { c: function(node, value) { 
+                        return new Document.CDataValue([ node.nodeName, value ].join('-')); } }).toString())
+                    .to.equal('<a><b/><b><c><![CDATA[c-]]></c></b></a>');
+            });
+
+            it('should set node xml value', function() {
+                expect(Document.load('<a><b/></a>')
+                    .add('a/b', { c: function(node, value) { 
+                        return new Document.XmlString('<' + node.nodeName + '>' + value + '</' + node.nodeName + '>'); } }).toString())
+                    .to.equal('<a><b/><b><c><c/></c></b></a>');
+            });
+            
+        });
+
+    });
+
     describe('setOrAdd', function() {
 
         describe('base path', function() {

@@ -110,24 +110,28 @@ The `errorOnNoMatches` option *does not* cause this method to throw an exception
 
 ##### Setting Values and Content
 
-You can set the values or content of all matching nodes with the `set()` and `setOrAdd()` methods. Both of these methods take an XPath and a value or an object with XPath and value properties:
+You can set the values or content of all matching nodes with the `set()`, `add()` and `setOrAdd()` methods. These methods take an XPath and a value or an object with XPath and value properties:
 
 `set([xpath, value]|[object])`
+
+`add([xpath, value]|[object])`
 
 `setOrAdd([xpath, value]|[object])`
 
 ```js
 xmlpoke('**/*.config', function(xml) { 
     xml.set('some/path', 'value')
+       .add('some/path', 'value')
        .setOrAdd('some/path', 'value')
        .set({ 'first/path': 'value1', 'second/path': 'value2' })
+       .add({ 'first/path': 'value1', 'second/path': 'value2' })
        .setOrAdd({ 'first/path': 'value1', 'second/path': 'value2' });
 });
 ```
 
 The `set()` method expects all elements and attributes in the XPath to exist. If they do not, they will be ignored by default. To throw an exception specify the `errorOnNoMatches` option.
 
-The `setOrAdd()` method will attempt to set the value but if the the target element or attribute does not exist, it will attempt to create it. *This will not create the entire XPath, only the target element or attribute.* So the parent XPath must exist otherwise it will be ignored by default (To instead throw an exception, specify the `errorOnNoMatches` option). To be created, the target must be an attribute or an element. Elements can have multiple predicates that compare *equality* of an attribute or element with a string value. If these predicates are specified, the comparison values in the predicates will be set in the new element. Any predicates that do not meet these exact requirements are ignored. The following are examples of acceptable XPath targets and the resulting xml:
+The `add()` method will create a new target node regardless of if there is a match. As such, this method is not very useful for attributes unless you are sure it doesen't already exist. On the other hand the `setOrAdd()` method will attempt to set the value on an existing node, but if the the target element or attribute does not exist, it will attempt to create it. *This will not create the entire XPath, only the target element or attribute.* So the parent XPath must exist otherwise it will be ignored by default (To instead throw an exception, specify the `errorOnNoMatches` option). To be created, the target must be an attribute or an element. Elements can have multiple predicates that compare *equality* of an attribute or element with a string value. If these predicates are specified, the comparison values in the predicates will be set in the new element. Any predicates that do not meet these exact requirements are ignored. The following are examples of acceptable XPath targets and the resulting xml:
 
 ```js
 setOrAdd('el/@attr', 'value') // <el/> --> <el attr="value"/>
