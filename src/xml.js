@@ -27,13 +27,13 @@ function isCDataValue(object) {
 }
 
 function parsePredicates(path) {
-    var regex = /(\[(.*?)=\s*'(.*?)'\s*\])/g;
+    var regex = /((\[|and)\s*([^'=]*)\s*=\s*'([^']*)')/g;
     var predicates = [], predicate;
     while (predicate = regex.exec(path)) {
         predicates.push({
-            name: _.ltrim(_.trim(predicate[2]), '@'), 
-            value: predicate[3], 
-            attribute: _.startsWith(_.trim(predicate[2]), '@')
+            name: _.ltrim(_.trim(predicate[3]), '@'), 
+            value: predicate[4], 
+            attribute: _.startsWith(_.trim(predicate[3]), '@')
         });
     }
     return predicates;

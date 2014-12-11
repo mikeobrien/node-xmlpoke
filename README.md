@@ -131,12 +131,12 @@ xmlpoke('**/*.config', function(xml) {
 
 The `set()` method expects all elements and attributes in the XPath to exist. If they do not, they will be ignored by default. To throw an exception specify the `errorOnNoMatches` option.
 
-The `add()` method will create a new target node regardless of if there is a match. As such, this method is not very useful for attributes unless you are sure it doesen't already exist. On the other hand the `setOrAdd()` method will attempt to set the value on an existing node, but if the the target element or attribute does not exist, it will attempt to create it. *This will not create the entire XPath, only the target element or attribute.* So the parent XPath must exist otherwise it will be ignored by default (To instead throw an exception, specify the `errorOnNoMatches` option). To be created, the target must be an attribute or an element. Elements can have multiple predicates that compare *equality* of an attribute or element with a string value. If these predicates are specified, the comparison values in the predicates will be set in the new element. Any predicates that do not meet these exact requirements are ignored. The following are examples of acceptable XPath targets and the resulting xml:
+The `add()` method will create a new target node regardless of if there is a match. As such, this method is not very useful for attributes unless you are sure it doesen't already exist. On the other hand the `setOrAdd()` method will attempt to set the value on an existing node, but if the the target element or attribute does not exist, it will attempt to create it. *This will not create the entire XPath, only the target element or attribute.* So the parent XPath must exist otherwise it will be ignored by default (To instead throw an exception, specify the `errorOnNoMatches` option). To be created, the target must be an attribute or an element. Element XPaths can have a predicate that compare *equality* of one or more attributes or elements with a string value. The logical operators must be `and`. If these predicates are specified, the comparison values in the predicates will be set in the new element. Any predicates that do not meet these exact requirements are ignored. The following are examples of acceptable XPath targets and the resulting xml:
 
 ```js
 setOrAdd('el/@attr', 'value') // <el/> --> <el attr="value"/>
 setOrAdd('el1/el2', 'value') // <el1/> --> <el1><el2>value</el2></el1>
-setOrAdd("el1/el2[@attr1='value1'][@attr2='value2']", 'value3') 
+setOrAdd("el1/el2[@attr1='value1' and @attr2='value2']", 'value3') 
     // <el1/> --> <el1><el2 attr1="value1" attr2="value2">value3</el2></el1>
 ```
 
