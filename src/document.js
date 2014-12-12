@@ -74,6 +74,19 @@ function queryNodes(query, path, errorOnNoMatches, addIfMissing, alwaysAdd) {
     return nodes;
 };
 
+function ensurePath(query, path) {
+
+    var pathParts = path.split('/');
+    var currentPath = '';
+    var exists = true;
+
+    pathParts.forEach(function(pathPart) {
+        currentPath += (currentPath ? '/' : '') + pathPart;
+        if (!exists || !(exists = (query.getNodes(currentPath).length > 0)))
+            createNodes(query, currentPath);
+    });
+};
+
 function clearNodes(query) {
     query.forEach(function(x) { xml.clearChildNodes(x); });
 }
@@ -92,7 +105,7 @@ function openXmlFile(path, encoding) {
 }
 
 function loadXml(source) {
-    var document = xmlParser.parseFromString(source)
+    var document = xmlParser.parseFromString(source);
     var basePath, namespaces, errorOnNoMatches;
 
     var query = function(path, errorOnNoMatches, addIfMissing, alwaysAdd) {
@@ -139,6 +152,11 @@ function loadXml(source) {
 
         set: function() {
             setValues(Args(arguments).toObject(), namespaces, errorOnNoMatches, false, false);
+            return dsl;
+        },
+
+        ensure: function(path) {
+            ensurePath(buildQuery(document, namespaces), path);
             return dsl;
         },
 

@@ -22,6 +22,8 @@ describe('xml', function() {
                 keys: [ { name: 'name', value: 'value', attribute: false } ] } ],
             [ "a/b/c[@name='value']", { path: 'a/b', name: 'c', attribute: false, 
                 keys: [ { name: 'name', value: 'value', attribute: true } ] } ],
+            [ "a/b[@name1='value1']/c[@name2='value2']", { path: "a/b[@name1='value1']", name: 'c', attribute: false, 
+                keys: [ { name: 'name2', value: 'value2', attribute: true } ]} ],
             [ "a/b/c[@name1='value1' and @name2='value2']", { path: 'a/b', name: 'c', attribute: false, 
                 keys: [ { name: 'name1', value: 'value1', attribute: true },
                         { name: 'name2', value: 'value2', attribute: true } ]} ],
@@ -93,11 +95,14 @@ describe('xml', function() {
     }));
 
     it('should map namespaces', cases([
-        [ '<el xmlns="uri:yada"/>', 'attr' ],
-        [ '<el xmlns:z="uri:yada"/>', 'z:attr' ]
-    ], function (source, name) {
+        [ '<el xmlns="uri:yada"/>', 'attr', null, 'attr' ],
+        [ '<el xmlns="uri:yada"/>', 'x:attr', 'uri:yada', 'attr' ],
+        [ '<el xmlns:z="uri:yada"/>', 'x:attr', 'uri:yada', 'z:attr' ]
+    ], function (source, sourceName, namespace, name) {
         var parent = xmlParser.parseFromString(source).firstChild;
-        expect(xml.mapNamespaces('x:attr', { x: 'uri:yada' }, parent)).to.equal(name);
+        var node = xml.mapNamespaces(sourceName, parent, { x: 'uri:yada' });
+        expect(node.namespace).to.equal(namespace);
+        expect(node.name).to.equal(name);
     }));
 
     it('should clear children', function () {
@@ -257,7 +262,8 @@ describe('xml', function() {
 
           expect(results).to.have.length(1);
 
-          expect(results[0].nodeName).to.equal('z:d');
+          expect(results[0].prefix).to.equal('z');
+          expect(results[0].localName).to.equal('d');
           expect(results[0].textContent).to.be.empty;
 
           expect(doc.toString()).to.equal('<a xmlns:z="uri:yada"><b><z:d/></b></a>');

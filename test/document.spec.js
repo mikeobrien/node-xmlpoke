@@ -1,6 +1,7 @@
 "use strict";
 
 var expect = require('chai').expect,
+    cases = require('cases'),
     temp = require('temp').track(),
     fs = require('fs'),
     Document = require('../src/document');
@@ -62,6 +63,27 @@ describe('document', function() {
             expect(Document.load('<a><b/><b/><c/></a>')
                 .remove('a/b').toString())
                 .to.equal('<a><c/></a>');
+        });
+
+    });
+
+    describe('ensure', function() {
+
+        it('should create missing nodes', cases([
+            [ "a/b/c", '<a><b><c/></b></a>' ],
+            [ "a/b[c='1']/d[@e='2']", '<a><b><c>1</c><d e="2"/></b></a>' ],
+            [ "a/b[@c='1']/d[e='2']", '<a><b c="1"><d><e>2</e></d></b></a>' ],
+            [ "a/b[@c='1' and @d='2']/e[f='3']", '<a><b c="1" d="2"><e><f>3</f></e></b></a>' ],
+        ], function (xpath, result) {
+            expect(Document.load('<a/>')
+                .ensure(xpath).toString())
+                .to.equal(result);
+        }));
+
+        it('should ignore existing elements', function() {
+            expect(Document.load('<a><b c="1" d="2"><e><f>3</f></e></b></a>')
+                .ensure("a/b[@c='1' and @d='2']/e[f='3']").toString())
+                .to.equal('<a><b c="1" d="2"><e><f>3</f></e></b></a>');
         });
 
     });

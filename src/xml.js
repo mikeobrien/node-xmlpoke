@@ -40,13 +40,13 @@ function parsePredicates(path) {
 }
 
 function parseXPath(path) {
-    var segments = path.match(/(.*)\/([^\[]*)/);
+    var segments = path.match(/(.*)\/([^\[]*)(.*)/);
     if (!segments) return null;
     var node = {
         path: _.trim(segments[1]), 
         name: _.ltrim(_.trim(segments[2]), '@'), 
         attribute: _.startsWith(_.trim(segments[2]), '@'),
-        keys: parsePredicates(path)
+        keys: parsePredicates(segments[3])
     };
     return node;
 }
@@ -55,11 +55,22 @@ function joinXPath(path1, path2) {
     return path1 ? _.rtrim(path1, '/') + '/' + _.ltrim(path2, '/') : path2;
 }
 
-function mapNamespaces(name, pathNamespaces, parent) {
+function parseQualifiedName(name) {
     var nameParts = name.split(':');
-    if (nameParts.length == 1) return name;
-    var prefix = parent.lookupPrefix(pathNamespaces[nameParts[0]]);
-    return (prefix ? prefix + ':' : '') + nameParts[1];
+    return {
+        prefix: nameParts.length > 1 ? _.first(nameParts) : null,
+        name: _.last(nameParts)
+    };
+}
+
+function mapNamespaces(name, parent, pathNamespaces) {
+    name = parseQualifiedName(name);
+    var namespace = pathNamespaces && name.prefix ? pathNamespaces[name.prefix] : null;
+    var prefix = namespace ? parent.lookupPrefix(namespace) : null;
+    return {
+        namespace: namespace ? namespace : null,
+        name: (prefix ? prefix + ':' : '') + name.name
+    };
 }
 
 function removeNode(node) {
@@ -75,7 +86,7 @@ function clearChildNodes(node) {
 function setNodeValue(node, value) {
     if (_.isFunction(value)) value = value(node, getNodeValue(node));
     if (node.nodeType == ATTRIBUTE_NODE) {                     
-        node.value = value;
+        node.value = node.nodeValue = value;
     } 
     else if (isCDataValue(value)) {
         clearChildNodes(node);
@@ -97,14 +108,14 @@ function getNodeValue(node) {
 }
 
 function addNode(namespaces, parent, name, isAttribute, value) {
-    name = mapNamespaces(name, namespaces, parent);
+    name = mapNamespaces(name, parent, namespaces);
     var node;
     if (isAttribute) {
-        node = parent.ownerDocument.createAttribute(name);
+        node = parent.ownerDocument.createAttributeNS(name.namespace, name.name);
         parent.setAttributeNode(node);
     }
     else {
-        node = parent.ownerDocument.createElement(name);
+        node = parent.ownerDocument.createElementNS(name.namespace, name.name);
         parent.appendChild(node);
     }
     if (value) setNodeValue(node, value);

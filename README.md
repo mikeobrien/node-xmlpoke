@@ -16,7 +16,7 @@ The xmlpoke module exports a function that modifies xml files:
 
 `xmlpoke(path1, [path2], [...], [pathMap], modify)`
 
-Or allows you to modify an xml string:
+Or modifies an xml string:
 
 `xmlpoke(xml, modify)`
 
@@ -108,6 +108,33 @@ xmlpoke('**/*.config', function(xml) {
 
 The `errorOnNoMatches` option *does not* cause this method to throw an exception if the specified XPath yields no results.
 
+##### Ensuring the Existence of Elements
+
+You can ensure the existence of elements with the `ensure(xpath)` method. This method will create the entire path. In order to do this the path must contain only elements. It must not contain any axis specifiers. Element axes can have a predicate that compares the *equality* of one or more attributes or elements with a *string* value. Only the `=` comparison operator and `and` logical operators are allowed. If these predicates are specified, and the element does not exist, the predicate values will be set in the new element. Any predicates that do not meet these exact requirements are ignored. The following are examples of acceptable XPaths and the resulting xml when the source is `<el1/>`:
+
+```js
+ensure('el1/el2/el3');
+```
+```xml
+<el1>
+    <el2>
+        <el3/>
+    </el2>
+</el1>
+```
+```js
+ensure("el1/el2[@attr1='1' and @attr2='2']/el3[el4='3']");
+```
+```xml
+<el1>
+    <el2 attr1="1" attr2="2">
+        <el3>
+            <el4>3</el4>
+        </el3>
+    </el2>
+</el1>
+```
+
 ##### Setting Values and Content
 
 You can set the values or content of all matching nodes with the `set()`, `add()` and `setOrAdd()` methods. These methods take an XPath and a value or an object with XPath and value properties:
@@ -131,13 +158,30 @@ xmlpoke('**/*.config', function(xml) {
 
 The `set()` method expects all elements and attributes in the XPath to exist. If they do not, they will be ignored by default. To throw an exception specify the `errorOnNoMatches` option.
 
-The `add()` method will create a new target node regardless of if there is a match. As such, this method is not very useful for attributes unless you are sure it doesen't already exist. On the other hand the `setOrAdd()` method will attempt to set the value on an existing node, but if the the target element or attribute does not exist, it will attempt to create it. *This will not create the entire XPath, only the target element or attribute.* So the parent XPath must exist otherwise it will be ignored by default (To instead throw an exception, specify the `errorOnNoMatches` option). To be created, the target must be an attribute or an element. Element XPaths can have a predicate that compare *equality* of one or more attributes or elements with a string value. The logical operators must be `and`. If these predicates are specified, the comparison values in the predicates will be set in the new element. Any predicates that do not meet these exact requirements are ignored. The following are examples of acceptable XPath targets and the resulting xml:
+The `add()` method will create a new target node regardless of if there is a match. As such, this method is not very useful for attributes unless you are sure it doesn't already exist. On the other hand the `setOrAdd()` method will attempt to create the node if it doesn't exist, then set its value or content. *This will not create the entire XPath as `ensure()` does, only the target element or attribute i.e. the last node in the XPath query.* So the parent XPath must exist otherwise it will be ignored by default (To instead throw an exception, specify the `errorOnNoMatches` option). To be created, the target must be an attribute or an element. Element XPaths can have a predicate that compares the *equality* of one or more attributes or elements with a *string* value. Only the `=` comparison operator and `and` logical operators are allowed. If these predicates are specified, and the element does not exist, the predicate values will be set in the new element. Any predicates that do not meet these exact requirements are ignored. The following are examples of acceptable XPaths and the resulting xml when the source is `<el1/>`:
 
 ```js
-setOrAdd('el/@attr', 'value') // <el/> --> <el attr="value"/>
-setOrAdd('el1/el2', 'value') // <el1/> --> <el1><el2>value</el2></el1>
-setOrAdd("el1/el2[@attr1='value1' and @attr2='value2']", 'value3') 
-    // <el1/> --> <el1><el2 attr1="value1" attr2="value2">value3</el2></el1>
+setOrAdd('el1/@attr', 'value');
+```
+```xml
+<el1 attr="value"/>
+```
+```js
+setOrAdd('el1/el2', 'value');
+```
+```xml
+<el1>
+    <el2>value</el2>
+</el1>
+```
+```js
+setOrAdd("el1[el2='value1']/el3[@attr1='value2' and @attr2='value3']", 'value4');
+```
+```xml
+<el1>
+    <el2>value1</el2>
+    <el3 attr1="value2" attr2="value3">value4</el3>
+</el1>
 ```
 
 Values can be strings, CData, raw xml, a function or an object containing multiple attribute and element values. For example:
@@ -180,13 +224,15 @@ xmlpoke('**/*.config', function(xml) {
                 el3: xml.XmlString('<el attr="oh">hai</el>'),
                 el4: function(node, value) { return 'value'; }
             }
-        å});
+        });
 });
 ```
 
 The `CDataValue()` and `XmlString()` methods exposed by the DSL are simply convenience methods for creating `CDataValue` and `XmlString` objects. These constructors are defined on the module and can be created directly as follows:
 
 ```js
+var xmlpoke = require('xmlpoke');
+
 var cdata = new xmlpoke.CDataValue('value');
 var xmlstring = new xmlpoke.XmlString('<el attr="value">hai</el>');
 
