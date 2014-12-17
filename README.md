@@ -1,6 +1,6 @@
 # xmlpoke
 
-[![npm version](http://img.shields.io/npm/v/xmlpoke.svg)](https://npmjs.org/package/xmlpoke) [![build status](http://img.shields.io/travis/mikeobrien/node-xmlpoke.svg)](https://travis-ci.org/mikeobrien/node-xmlpoke) [![Dependency Status](http://img.shields.io/david/mikeobrien/node-xmlpoke.svg)](https://david-dm.org/mikeobrien/node-xmlpoke) [![npm downloads](http://img.shields.io/npm/dm/xmlpoke.svg)](https://npmjs.org/package/xmlpoke)
+[![npm version](http://img.shields.io/npm/v/xmlpoke.svg?style=flat)](https://npmjs.org/package/xmlpoke) [![build status](http://img.shields.io/travis/mikeobrien/node-xmlpoke.svg?style=flat)](https://travis-ci.org/mikeobrien/node-xmlpoke) [![Dependency Status](http://img.shields.io/david/mikeobrien/node-xmlpoke.svg?style=flat)](https://david-dm.org/mikeobrien/node-xmlpoke) [![npm downloads](http://img.shields.io/npm/dm/xmlpoke.svg?style=flat)](https://npmjs.org/package/xmlpoke)
 
 Node module for modifying XML files. Inspired by [NAnt XmlPoke](http://nant.sourceforge.net/release/0.92/help/tasks/xmlpoke.html).
 
