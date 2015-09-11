@@ -21,13 +21,13 @@ function setNodeValues(namespaces, nodes, value) {
 
     if (!nodes || nodes.length == 0) return;
 
-    if (_.isString(value) || xml.isXmlString(value) || 
-        xml.isCDataValue(value) || _.isFunction(value)) 
+    if (_.isString(value) || xml.isXmlString(value) ||
+        xml.isCDataValue(value) || _.isFunction(value))
         nodes.forEach(function(node) { xml.setNodeValue(node, value); });
     else {
         var set = _.partial(setNodeValues, namespaces);
         _.forOwn(value, function(value, name) {
-            if (_.startsWith(name, '@')) 
+            if (_.startsWith(name, '@'))
                 set(xml.getAttributesNamed(namespaces, nodes, name.slice(1)), value);
             else set(xml.getChildElementsNamed(namespaces, nodes, name), value);
         });
@@ -110,15 +110,15 @@ function loadXml(source) {
 
     var query = function(path, errorOnNoMatches, addIfMissing, alwaysAdd) {
         return queryNodes(
-            buildQuery(document, namespaces), 
-            xml.joinXPath(basePath, path), 
+            buildQuery(document, namespaces),
+            xml.joinXPath(basePath, path),
             errorOnNoMatches, addIfMissing, alwaysAdd);
     }
 
-    var setValues = function(values, namespaces, errorOnNoMatches, addIfMissing, alwaysAdd) { 
-        _.forOwn(values, function(value, path) { 
-            setNodeValues(namespaces, query(path, 
-                errorOnNoMatches, addIfMissing, alwaysAdd), value); 
+    var setValues = function(values, namespaces, errorOnNoMatches, addIfMissing, alwaysAdd) {
+        _.forOwn(values, function(value, path) {
+            setNodeValues(namespaces, query(path,
+                errorOnNoMatches, addIfMissing, alwaysAdd), value);
         });
     }
 
@@ -156,7 +156,7 @@ function loadXml(source) {
         },
 
         ensure: function(path) {
-            ensurePath(buildQuery(document, namespaces), path);
+            ensurePath(buildQuery(document, namespaces), basePath ? xml.joinXPath(basePath, path) : path);
             return dsl;
         },
 

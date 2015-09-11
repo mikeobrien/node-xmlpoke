@@ -1,6 +1,6 @@
 {
   "name": "xmlpoke",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Module for modifying XML files.",
   "homepage": "https://github.com/mikeobrien/node-xmlpoke",
   "main": "src/xmlpoke.js",

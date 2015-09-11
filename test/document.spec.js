@@ -48,7 +48,7 @@ describe('document', function() {
         });
 
         it('should fail if no matches when configured', function() {
-            expect(function() { 
+            expect(function() {
                     Document.load('<a/>')
                         .errorOnNoMatches()
                         .clear('a/b'); })
@@ -80,6 +80,13 @@ describe('document', function() {
                 .to.equal(result);
         }));
 
+        it('should create missing nodes with base path', function () {
+            expect(Document.load('<a/>')
+                .withBasePath('a')
+                .ensure('b/c').toString())
+                .to.equal('<a><b><c/></b></a>');
+        });
+
         it('should ignore existing elements', function() {
             expect(Document.load('<a><b c="1" d="2"><e><f>3</f></e></b></a>')
                 .ensure("a/b[@c='1' and @d='2']/e[f='3']").toString())
@@ -98,7 +105,7 @@ describe('document', function() {
                     .set('b', 'c').toString())
                     .to.equal('<a><b>c</b></a>');
             });
-            
+
         });
 
         describe('object values', function() {
@@ -108,7 +115,7 @@ describe('document', function() {
                     .set({ 'a/b': 'd', 'a/c': 'e' }).toString())
                     .to.equal('<a><b>d</b><c>e</c></a>');
             });
-            
+
         });
 
         describe('missing elements', function() {
@@ -119,7 +126,7 @@ describe('document', function() {
             });
 
             it('should fail to set missing value when configured', function() {
-                expect(function() { 
+                expect(function() {
                         Document.load('<a/>')
                             .errorOnNoMatches()
                             .set('a/b/c', 'c'); })
@@ -157,7 +164,7 @@ describe('document', function() {
                     .set('a/@z:b', 'c').toString())
                     .to.equal('<a xmlns:x="uri:yada" x:b="c"/>');
             });
- 
+
         });
 
         describe('string', function() {
@@ -185,39 +192,39 @@ describe('document', function() {
                     .set('a', new Document.XmlString('<b/>')).toString())
                     .to.equal('<a><b/></a>');
             });
-            
+
         });
 
         describe('function', function() {
 
             it('should set attribute value', function() {
                 expect(Document.load('<a b="c"/>')
-                    .set('a/@b', function(node, value) { 
+                    .set('a/@b', function(node, value) {
                         return [ node.nodeName, value, 'd' ].join('-'); }).toString())
                     .to.equal('<a b="b-c-d"/>');
             });
 
             it('should set node value', function() {
                 expect(Document.load('<a>b</a>')
-                    .set('a', function(node, value) { 
+                    .set('a', function(node, value) {
                         return [ node.nodeName, value, 'c' ].join('-'); }).toString())
                     .to.equal('<a>a-b-c</a>');
             });
 
             it('should set node cdata value', function() {
                 expect(Document.load('<a>b</a>')
-                    .set('a', function(node, value) { 
+                    .set('a', function(node, value) {
                         return new Document.CDataValue([ node.nodeName, value, 'c' ].join('-')); }).toString())
                     .to.equal('<a><![CDATA[a-b-c]]></a>');
             });
 
             it('should set node xml value', function() {
                 expect(Document.load('<a>b</a>')
-                    .set('a', function(node, value) { 
+                    .set('a', function(node, value) {
                         return new Document.XmlString('<' + value + '>' + node.nodeName + '</' + value + '>'); }).toString())
                     .to.equal('<a><b>a</b></a>');
             });
-            
+
         });
 
         describe('object string', function() {
@@ -245,39 +252,39 @@ describe('document', function() {
                     .set('a', { b: new Document.XmlString('<c/>') }).toString())
                     .to.equal('<a><b><c/></b></a>');
             });
-            
+
         });
 
         describe('object function', function() {
 
             it('should set attribute value', function() {
                 expect(Document.load('<a b="c"/>')
-                    .set('a', { '@b': function(node, value) { 
+                    .set('a', { '@b': function(node, value) {
                         return [ node.nodeName, value, 'd' ].join('-'); } }).toString())
                     .to.equal('<a b="b-c-d"/>');
             });
 
             it('should set node value', function() {
                 expect(Document.load('<a><b>c</b></a>')
-                    .set('a', { b: function(node, value) { 
+                    .set('a', { b: function(node, value) {
                         return [ node.nodeName, value, 'd' ].join('-'); } }).toString())
                     .to.equal('<a><b>b-c-d</b></a>');
             });
 
             it('should set node cdata value', function() {
                 expect(Document.load('<a><b>c</b></a>')
-                    .set('a', { b: function(node, value) { 
+                    .set('a', { b: function(node, value) {
                         return new Document.CDataValue([ node.nodeName, value ].join('-')); } }).toString())
                     .to.equal('<a><b><![CDATA[b-c]]></b></a>');
             });
 
             it('should set node xml value', function() {
                 expect(Document.load('<a><b>c</b></a>')
-                    .set('a', { b: function(node, value) { 
+                    .set('a', { b: function(node, value) {
                         return new Document.XmlString('<' + value + '>' + node.nodeName + '</' + value + '>'); } }).toString())
                     .to.equal('<a><b><c>b</c></b></a>');
             });
-            
+
         });
 
     });
@@ -292,7 +299,7 @@ describe('document', function() {
                     .add('b', 'c').toString())
                     .to.equal('<a><b/><b>c</b></a>');
             });
-            
+
         });
 
         describe('object values', function() {
@@ -302,7 +309,7 @@ describe('document', function() {
                     .add({ 'a/b': 'd', 'a/c': 'e' }).toString())
                     .to.equal('<a><b/><c/><b>d</b><c>e</c></a>');
             });
-            
+
         });
 
         describe('missing elements', function() {
@@ -313,7 +320,7 @@ describe('document', function() {
             });
 
             it('should fail to set missing value when configured', function() {
-                expect(function() { 
+                expect(function() {
                         Document.load('<a/>')
                             .errorOnNoMatches()
                             .add('a/b/c', 'c'); })
@@ -351,7 +358,7 @@ describe('document', function() {
                     .add('a/@z:b', 'c').toString())
                     .to.equal('<a xmlns:x="uri:yada" x:b="c"/>');
             });
- 
+
         });
 
         describe('string', function() {
@@ -379,39 +386,39 @@ describe('document', function() {
                     .add('a/b', new Document.XmlString('<c/>')).toString())
                     .to.equal('<a><b/><b><c/></b></a>');
             });
-            
+
         });
 
         describe('function', function() {
 
             it('should set attribute value', function() {
                 expect(Document.load('<a/>')
-                    .add('a/@b', function(node, value) { 
+                    .add('a/@b', function(node, value) {
                         return [ node.nodeName, value, 'c' ].join('-'); }).toString())
                     .to.equal('<a b="b--c"/>');
             });
 
             it('should set node value', function() {
                 expect(Document.load('<a><b/></a>')
-                    .add('a/b', function(node, value) { 
+                    .add('a/b', function(node, value) {
                         return [ node.nodeName, value, 'c' ].join('-'); }).toString())
                     .to.equal('<a><b/><b>b--c</b></a>');
             });
 
             it('should set node cdata value', function() {
                 expect(Document.load('<a><b/></a>')
-                    .add('a/b', function(node, value) { 
+                    .add('a/b', function(node, value) {
                         return new Document.CDataValue([ node.nodeName, value, 'c' ].join('-')); }).toString())
                     .to.equal('<a><b/><b><![CDATA[b--c]]></b></a>');
             });
 
             it('should set node xml value', function() {
                 expect(Document.load('<a><b/></a>')
-                    .add('a/b', function(node, value) { 
+                    .add('a/b', function(node, value) {
                         return new Document.XmlString('<' + node.nodeName + '>' + value + '</' + node.nodeName + '>'); }).toString())
                     .to.equal('<a><b/><b><b/></b></a>');
             });
-            
+
         });
 
         describe('object string', function() {
@@ -439,39 +446,39 @@ describe('document', function() {
                     .add('a/b', { c: new Document.XmlString('<d/>') }).toString())
                     .to.equal('<a><b/><b><c><d/></c></b></a>');
             });
-            
+
         });
 
         describe('object function', function() {
 
             it('should set attribute value', function() {
                 expect(Document.load('<a><b/></a>')
-                    .add('a/b', { '@c': function(node, value) { 
+                    .add('a/b', { '@c': function(node, value) {
                         return [ node.nodeName, value, 'd' ].join('-'); } }).toString())
                     .to.equal('<a><b/><b c="c--d"/></a>');
             });
 
             it('should set node value', function() {
                 expect(Document.load('<a><b/></a>')
-                    .add('a/b', { c: function(node, value) { 
+                    .add('a/b', { c: function(node, value) {
                         return [ node.nodeName, value, 'd' ].join('-'); } }).toString())
                     .to.equal('<a><b/><b><c>c--d</c></b></a>');
             });
 
             it('should set node cdata value', function() {
                 expect(Document.load('<a><b/></a>')
-                    .add('a/b', { c: function(node, value) { 
+                    .add('a/b', { c: function(node, value) {
                         return new Document.CDataValue([ node.nodeName, value ].join('-')); } }).toString())
                     .to.equal('<a><b/><b><c><![CDATA[c-]]></c></b></a>');
             });
 
             it('should set node xml value', function() {
                 expect(Document.load('<a><b/></a>')
-                    .add('a/b', { c: function(node, value) { 
+                    .add('a/b', { c: function(node, value) {
                         return new Document.XmlString('<' + node.nodeName + '>' + value + '</' + node.nodeName + '>'); } }).toString())
                     .to.equal('<a><b/><b><c><c/></c></b></a>');
             });
-            
+
         });
 
     });
@@ -496,7 +503,7 @@ describe('document', function() {
                     .setOrAdd({ 'a/b': 'd', 'a/c': 'e' }).toString())
                     .to.equal('<a><b>d</b><c>e</c></a>');
             });
-            
+
         });
 
         describe('missing elements', function() {
@@ -507,7 +514,7 @@ describe('document', function() {
             });
 
             it('should fail to create missing parent node when configured', function() {
-                expect(function() { 
+                expect(function() {
                         Document.load('<a/>')
                             .errorOnNoMatches()
                             .setOrAdd('a/b/c', 'd'); })
@@ -559,7 +566,7 @@ describe('document', function() {
                     .setOrAdd('a', { '@z:b': 'c' }).toString())
                     .to.equal('<a xmlns:x="uri:yada" x:b="c"/>');
             });
- 
+
         });
 
         describe('string', function() {
@@ -587,39 +594,39 @@ describe('document', function() {
                     .setOrAdd('a/b', new Document.XmlString('<c/>')).toString())
                     .to.equal('<a><b><c/></b></a>');
             });
-            
+
         });
 
         describe('function', function() {
 
             it('should add attribute value with function', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a/@b', function(node, value) { 
+                    .setOrAdd('a/@b', function(node, value) {
                         return [ node.nodeName, value, 'c' ].join('-'); }).toString())
                     .to.equal('<a b="b--c"/>');
             });
 
             it('should add node value with function', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a/b', function(node, value) { 
+                    .setOrAdd('a/b', function(node, value) {
                         return [ node.nodeName, value, 'c' ].join('-'); }).toString())
                     .to.equal('<a><b>b--c</b></a>');
             });
 
             it('should add node cdata value', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a/b', function(node, value) { 
+                    .setOrAdd('a/b', function(node, value) {
                         return new Document.CDataValue([ node.nodeName, value, 'c' ].join('-')); }).toString())
                     .to.equal('<a><b><![CDATA[b--c]]></b></a>');
             });
 
             it('should add node xml value', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a/b', function(node, value) { 
+                    .setOrAdd('a/b', function(node, value) {
                         return new Document.XmlString('<c>' + node.nodeName + '</c>'); }).toString())
                     .to.equal('<a><b><c>b</c></b></a>');
             });
-            
+
         });
 
         describe('object string', function() {
@@ -647,39 +654,39 @@ describe('document', function() {
                     .setOrAdd('a', { b: new Document.XmlString('<c/>') }).toString())
                     .to.equal('<a><b><c/></b></a>');
             });
-            
+
         });
 
         describe('object function', function() {
 
             it('should add attribute value with object function', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a', { '@b': function(node, value) { 
+                    .setOrAdd('a', { '@b': function(node, value) {
                         return [ node.nodeName, value, 'c' ].join('-'); } }).toString())
                     .to.equal('<a b="b--c"/>');
             });
 
             it('should add node value with object function', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a', { b: function(node, value) { 
+                    .setOrAdd('a', { b: function(node, value) {
                         return [ node.nodeName, value, 'c' ].join('-'); } }).toString())
                     .to.equal('<a><b>b--c</b></a>');
             });
 
             it('should set node cdata value', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a', { b: function(node, value) { 
+                    .setOrAdd('a', { b: function(node, value) {
                         return new Document.CDataValue([ node.nodeName, value, 'c' ].join('-')); } }).toString())
                     .to.equal('<a><b><![CDATA[b--c]]></b></a>');
             });
 
             it('should set node xml value', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a', { b: function(node, value) { 
+                    .setOrAdd('a', { b: function(node, value) {
                         return new Document.XmlString('<c>' + node.nodeName + '</c>'); } }).toString())
                     .to.equal('<a><b><c>b</c></b></a>');
             });
-            
+
         });
 
     });
