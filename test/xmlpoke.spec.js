@@ -50,7 +50,7 @@ describe('xmlpoke', function() {
     it('should should poke paths and objects with default path', function() {
 
         xmlpoke(path.join(basePath, 'a.*'),
-            { path: path.join(basePath, 'dir/a.*'), value: 'd' }, 
+            { path: path.join(basePath, 'dir/a.*'), value: 'd' },
             function(xml, context) {
                 xml.set('a/b', context.value || 'c');
             });
@@ -141,6 +141,26 @@ describe('xmlpoke', function() {
         });
 
         expect(xml).to.equal('<a>b</a>');
+
+    });
+
+    it('should poke boolean', function() {
+
+        var xml = xmlpoke('<a/>', function(xml) {
+            xml.set('a', true);
+        });
+
+        expect(xml).to.equal('<a>true</a>');
+
+    });
+
+    it('should poke numbers', function() {
+
+        var xml = xmlpoke('<a/>', function(xml) {
+            xml.set('a', 5);
+        });
+
+        expect(xml).to.equal('<a>5</a>');
 
     });
 

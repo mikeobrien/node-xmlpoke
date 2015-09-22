@@ -31,8 +31,8 @@ function parsePredicates(path) {
     var predicates = [], predicate;
     while (predicate = regex.exec(path)) {
         predicates.push({
-            name: _.ltrim(_.trim(predicate[3]), '@'), 
-            value: predicate[4], 
+            name: _.ltrim(_.trim(predicate[3]), '@'),
+            value: predicate[4],
             attribute: _.startsWith(_.trim(predicate[3]), '@')
         });
     }
@@ -43,8 +43,8 @@ function parseXPath(path) {
     var segments = path.match(/(.*)\/([^\[]*)(.*)/);
     if (!segments) return null;
     var node = {
-        path: _.trim(segments[1]), 
-        name: _.ltrim(_.trim(segments[2]), '@'), 
+        path: _.trim(segments[1]),
+        name: _.ltrim(_.trim(segments[2]), '@'),
         attribute: _.startsWith(_.trim(segments[2]), '@'),
         keys: parsePredicates(segments[3])
     };
@@ -85,9 +85,9 @@ function clearChildNodes(node) {
 
 function setNodeValue(node, value) {
     if (_.isFunction(value)) value = value(node, getNodeValue(node));
-    if (node.nodeType == ATTRIBUTE_NODE) {                     
-        node.value = node.nodeValue = value;
-    } 
+    if (node.nodeType == ATTRIBUTE_NODE) {
+        node.value = node.nodeValue = String(value);
+    }
     else if (isCDataValue(value)) {
         clearChildNodes(node);
         node.appendChild(node.ownerDocument
@@ -98,12 +98,12 @@ function setNodeValue(node, value) {
         node.appendChild(xmlParser.parseFromString(value.source));
     }
     else {
-        node.textContent = value;
+        node.textContent = String(value);
     }
 }
 
 function getNodeValue(node) {
-    return node.nodeType == ATTRIBUTE_NODE ? 
+    return node.nodeType == ATTRIBUTE_NODE ?
         node.value : node.textContent;
 }
 
@@ -123,23 +123,23 @@ function addNode(namespaces, parent, name, isAttribute, value) {
 }
 
 function getAttributesNamed(namespaces, nodes, name) {
-    return _.map(nodes, function(x) { 
-        return x.getAttributeNode(name) || 
-            addNode(namespaces, x, name, true); 
+    return _.map(nodes, function(x) {
+        return x.getAttributeNode(name) ||
+            addNode(namespaces, x, name, true);
     });
 }
 
 function getChildElementsNamed(namespaces, nodes, name) {
     return _.chain(nodes)
-        .map(function(x) { 
-            var results = 
+        .map(function(x) {
+            var results =
                 _.chain(x.childNodes)
                     .toArray()
-                    .where(function(x) { 
-                        return x.nodeName == name && 
-                               x.nodeType == ELEMENT_NODE; 
-                    }).value(); 
-            return results.length > 0 ? results : 
+                    .where(function(x) {
+                        return x.nodeName == name &&
+                               x.nodeType == ELEMENT_NODE;
+                    }).value();
+            return results.length > 0 ? results :
                 addNode(namespaces, x, name);
         })
         .flatten()

@@ -21,8 +21,8 @@ function setNodeValues(namespaces, nodes, value) {
 
     if (!nodes || nodes.length == 0) return;
 
-    if (_.isString(value) || xml.isXmlString(value) ||
-        xml.isCDataValue(value) || _.isFunction(value))
+    if (_.isString(value)|| _.isBoolean(value) || _.isNumber(value) ||
+        xml.isXmlString(value) || xml.isCDataValue(value) || _.isFunction(value))
         nodes.forEach(function(node) { xml.setNodeValue(node, value); });
     else {
         var set = _.partial(setNodeValues, namespaces);
