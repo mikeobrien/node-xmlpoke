@@ -251,7 +251,7 @@ A base XPath can be specified so you do not have to specify the full XPath in fo
 ```js
 xmlpoke('**/*.config', function(xml) { 
     xml.withBasePath('configuration/appSettings')
-       .set("add[@name='key1']", 'value1'),
+       .set("add[@name='key1']", 'value1')
        .set("add[@name='key2']", 'value2');
 });
 ```
@@ -262,8 +262,8 @@ Namespaces can be registered as follows:
 
 ```js
 xmlpoke('**/*.config', function(xml) { 
-    xml.addNamespace('y', 'uri:oh'),
-       .addNamespace('z', 'uri:hai'),
+    xml.addNamespace('y', 'uri:oh')
+       .addNamespace('z', 'uri:hai')
        .set("y:config/z:value", 'value');
 });
 ```
@@ -274,7 +274,7 @@ By default, XPaths that do not yield any results are quietly ignored. To throw a
 
 ```js
 xmlpoke('**/*.config', function(xml) { 
-    xml.errorOnNoMatches(),
+    xml.errorOnNoMatches()
     ...;
 });
 ```
