@@ -2,6 +2,7 @@
 
 var fs = require('fs'),
     Args = require('./args'),
+    TRAILING_SPACES_REGEX = /\s*$/,
     xmldom = require('xmldom'),
     xmlParser = new xmldom.DOMParser(),
     xmlSerializer = new xmldom.XMLSerializer(),
@@ -106,6 +107,7 @@ function openXmlFile(path, encoding) {
 
 function loadXml(source) {
     var document = xmlParser.parseFromString(source);
+    var trailingSpaces = TRAILING_SPACES_REGEX.exec(source)[0];
     var basePath, namespaces, errorOnNoMatches;
 
     var query = function(path, errorOnNoMatches, addIfMissing, alwaysAdd) {
@@ -179,7 +181,8 @@ function loadXml(source) {
         },
 
         toString: function() {
-            return xmlSerializer.serializeToString(document);
+            var s = xmlSerializer.serializeToString(document);
+            return s.replace(TRAILING_SPACES_REGEX, trailingSpaces)
         }
     };
     return dsl;
