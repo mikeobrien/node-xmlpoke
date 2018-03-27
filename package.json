@@ -41,6 +41,6 @@
     "lodash": "^2.4.1",
     "underscore.string": "^2.4.0",
     "xmldom": "^0.1.27",
-    "xpath": "^0.0.24"
+    "xpath": "~0.0.27"
   }
 }
