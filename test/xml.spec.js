@@ -8,8 +8,6 @@ var expect = require('chai').expect,
     xpath = require('xpath'),
     xml = require('../src/xml');
 
-_.mixin(require('underscore.string').exports());
-
 describe('xml', function() {
 
     describe('parseXPath', function() {

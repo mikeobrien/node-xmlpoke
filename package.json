@@ -39,7 +39,6 @@
   "dependencies": {
     "glob": "^7.1.2",
     "lodash": "^3.10.1",
-    "underscore.string": "^2.4.0",
     "xmldom": "^0.1.27",
     "xpath": "~0.0.27"
   }

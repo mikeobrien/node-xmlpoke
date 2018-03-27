@@ -10,8 +10,6 @@ var fs = require('fs'),
     xml = require('./xml'),
     _ = require('lodash');
 
-_.mixin(require('underscore.string').exports());
-
 function throwNoMatchingNodesError(path) {
     var warning = "No matching nodes for xpath '" + path + "'.";
     console.log(warning);
