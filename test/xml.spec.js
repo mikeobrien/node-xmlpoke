@@ -2,13 +2,10 @@
 
 var expect = require('chai').expect,
     cases = require('cases'),
-    _ = require('lodash'),
     xmldom = require('xmldom'),
     xmlParser = new xmldom.DOMParser(),
     xpath = require('xpath'),
     xml = require('../src/xml');
-
-_.mixin(require('underscore.string').exports());
 
 describe('xml', function() {
 

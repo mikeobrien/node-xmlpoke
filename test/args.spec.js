@@ -2,8 +2,7 @@
 
 var expect = require('chai').expect,
     cases = require('cases'),
-    Args = require('../src/args'),
-    _ = require('lodash');
+    Args = require('../src/args');
 
 function args() { return arguments; }
 

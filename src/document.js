@@ -137,7 +137,7 @@ function loadXml(source) {
             return dsl;
         },
 
-        errorOnNoMatches: function(prefix, uri) {
+        errorOnNoMatches: function() {
             errorOnNoMatches = true;
             return dsl;
         },

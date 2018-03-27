@@ -8,7 +8,6 @@ _.mixin(require('underscore.string').exports());
 
 var ELEMENT_NODE = 1;
 var ATTRIBUTE_NODE = 2;
-var CDATA_SECTION_NODE = 4;
 
 function XmlString(xml) {
     this.source = xml;
