@@ -8,7 +8,8 @@ gulp.task('default', ['test', 'lint']);
 gulp.task('lint', function() {
     return gulp.src(['**/*.js', '!node_modules/**/*'])
         .pipe(jshint())
-        .pipe(jshint.reporter('default'));
+        .pipe(jshint.reporter('default'))
+        .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('test', function() {
