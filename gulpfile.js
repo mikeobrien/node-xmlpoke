@@ -7,7 +7,7 @@ gulp.task('default', ['test', 'lint']);
 
 gulp.task('lint', function() {
     return gulp.src(['**/*.js', '!node_modules/**/*'])
-        .pipe(jshint({ node: true }))
+        .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
