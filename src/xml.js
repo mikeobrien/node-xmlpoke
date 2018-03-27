@@ -135,9 +135,9 @@ function getChildElementsNamed(namespaces, nodes, name) {
             var results =
                 _.chain(x.childNodes)
                     .toArray()
-                    .where(function(x) {
-                        return x.nodeName == name &&
-                               x.nodeType == ELEMENT_NODE;
+                    .where({
+                        nodeName: name,
+                        nodeType: ELEMENT_NODE,
                     }).value();
             return results.length > 0 ? results :
                 addNode(namespaces, x, name);
