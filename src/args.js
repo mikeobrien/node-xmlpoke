@@ -20,5 +20,5 @@ module.exports = function (args) {
             else if (args.length == 1 && _.isObject(args[0])) return args[0];
             return {};
         }
-    }
-}
+    };
+};

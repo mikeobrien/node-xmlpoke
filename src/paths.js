@@ -22,7 +22,7 @@ function expand() {
             })
         .map(function(x) { 
             return x.paths.map(function(path) { 
-                return { id: x.id, path: path, context: x.context }; })
+                return { id: x.id, path: path, context: x.context }; });
             })
         .flatten()
         .uniq(function(x) { return x.id + ':' + x.path; })
