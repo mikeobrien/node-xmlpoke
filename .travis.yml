@@ -1,3 +1,11 @@
 language: node_js
+
+# node.js versions to test with
 node_js:
-  - "0.10"
+  - "node"  # latest stable Node.js release
+  - "lts/*" # latest LTS Node.js release
+
+  # Further releases that have not reached EOL.
+  # See https://github.com/nodejs/Release
+  - "6"
+  - "4"
