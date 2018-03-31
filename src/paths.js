@@ -9,7 +9,7 @@ function expand() {
     var getPath = _.chain(paths).last().isFunction().value() ? 
         paths.pop() : function(x) { return x.path; };
 
-    if (!_.any(paths)) throw Error('No paths specified!');
+    if (!_.some(paths)) throw Error('No paths specified!');
 
     return _.chain(paths)
         .map(function(x) { 
@@ -24,7 +24,7 @@ function expand() {
                 return { id: x.id, path: path, context: x.context }; });
             })
         .flatten()
-        .uniq(function(x) { return x.id + ':' + x.path; })
+        .uniqBy(function(x) { return x.id + ':' + x.path; })
         .value();
 }
 

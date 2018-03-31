@@ -28,7 +28,7 @@ function parsePredicates(path) {
     var predicates = [], predicate;
     while ((predicate = regex.exec(path))) {
         predicates.push({
-            name: _.trimLeft(_.trim(predicate[3]), '@'),
+            name: _.trimStart(_.trim(predicate[3]), '@'),
             value: predicate[4],
             attribute: _.startsWith(_.trim(predicate[3]), '@')
         });
@@ -41,7 +41,7 @@ function parseXPath(path) {
     if (!segments) return null;
     var node = {
         path: _.trim(segments[1]),
-        name: _.trimLeft(_.trim(segments[2]), '@'),
+        name: _.trimStart(_.trim(segments[2]), '@'),
         attribute: _.startsWith(_.trim(segments[2]), '@'),
         keys: parsePredicates(segments[3])
     };
@@ -49,7 +49,7 @@ function parseXPath(path) {
 }
 
 function joinXPath(path1, path2) {
-    return path1 ? _.trimRight(path1, '/') + '/' + _.trimLeft(path2, '/') : path2;
+    return path1 ? _.trimEnd(path1, '/') + '/' + _.trimStart(path2, '/') : path2;
 }
 
 function parseQualifiedName(name) {
@@ -132,7 +132,7 @@ function getChildElementsNamed(namespaces, nodes, name) {
             var results =
                 _.chain(x.childNodes)
                     .toArray()
-                    .where({
+                    .filter({
                         nodeName: name,
                         nodeType: ELEMENT_NODE,
                     }).value();
