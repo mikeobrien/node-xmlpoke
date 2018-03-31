@@ -622,7 +622,7 @@ describe('document', function() {
 
             it('should add node xml value', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a/b', function(node, value) {
+                    .setOrAdd('a/b', function(node) {
                         return new Document.XmlString('<c>' + node.nodeName + '</c>'); }).toString())
                     .to.equal('<a><b><c>b</c></b></a>');
             });
@@ -682,7 +682,7 @@ describe('document', function() {
 
             it('should set node xml value', function() {
                 expect(Document.load('<a/>')
-                    .setOrAdd('a', { b: function(node, value) {
+                    .setOrAdd('a', { b: function(node) {
                         return new Document.XmlString('<c>' + node.nodeName + '</c>'); } }).toString())
                     .to.equal('<a><b><c>b</c></b></a>');
             });

@@ -73,7 +73,7 @@ function queryNodes(query, path, errorOnNoMatches, addIfMissing, alwaysAdd) {
     else if (errorOnNoMatches) throwNoMatchingNodesError(path);
 
     return nodes;
-};
+}
 
 function ensurePath(query, path) {
 
@@ -86,7 +86,7 @@ function ensurePath(query, path) {
         if (!exists || !(exists = (query.getNodes(currentPath).length > 0)))
             createNodes(query, currentPath);
     });
-};
+}
 
 function clearNodes(query) {
     query.forEach(function(x) { xml.clearChildNodes(x); });
@@ -98,10 +98,10 @@ function removeNodes(query) {
 
 function openXmlFile(path, encoding) {
     encoding = encoding || 'utf8';
-    var document = loadXml(fs.readFileSync(path, encoding))
+    var document = loadXml(fs.readFileSync(path, encoding));
     document.save = function() {
         fs.writeFileSync(path, document.toString(), encoding);
-    }
+    };
     return document;
 }
 
@@ -115,14 +115,14 @@ function loadXml(source) {
             buildQuery(document, namespaces),
             xml.joinXPath(basePath, path),
             errorOnNoMatches, addIfMissing, alwaysAdd);
-    }
+    };
 
     var setValues = function(values, namespaces, errorOnNoMatches, addIfMissing, alwaysAdd) {
         _.forOwn(values, function(value, path) {
             setNodeValues(namespaces, query(path,
                 errorOnNoMatches, addIfMissing, alwaysAdd), value);
         });
-    }
+    };
 
     var dsl = {
 
@@ -137,7 +137,7 @@ function loadXml(source) {
             return dsl;
         },
 
-        errorOnNoMatches: function(prefix, uri) {
+        errorOnNoMatches: function() {
             errorOnNoMatches = true;
             return dsl;
         },
@@ -182,7 +182,7 @@ function loadXml(source) {
 
         toString: function() {
             var s = xmlSerializer.serializeToString(document);
-            return s.replace(TRAILING_SPACES_REGEX, trailingSpaces)
+            return s.replace(TRAILING_SPACES_REGEX, trailingSpaces);
         }
     };
     return dsl;

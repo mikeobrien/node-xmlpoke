@@ -93,7 +93,7 @@ describe('xmlpoke', function() {
 
     it('should poke files with cdata outside dsl', function() {
 
-        var cdata = new xmlpoke.CDataValue('c')
+        var cdata = new xmlpoke.CDataValue('c');
 
         xmlpoke(path.join(basePath, '**/a.*'), function(xml) {
             xml.set('a/b', cdata);

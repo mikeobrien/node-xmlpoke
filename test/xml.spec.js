@@ -2,13 +2,10 @@
 
 var expect = require('chai').expect,
     cases = require('cases'),
-    _ = require('lodash'),
     xmldom = require('xmldom'),
     xmlParser = new xmldom.DOMParser(),
     xpath = require('xpath'),
     xml = require('../src/xml');
-
-_.mixin(require('underscore.string').exports());
 
 describe('xml', function() {
 
@@ -58,7 +55,7 @@ describe('xml', function() {
     describe('XmlString', function() {
 
         it('should indicate if object is xml string', cases([
-            [ new Object(), false ],
+            [ {}, false ],
             [ new xml.XmlString('<a/>'), true ]
         ], function (object, isXmlString) {
             expect(xml.isXmlString(object)).to.equal(isXmlString);
@@ -74,7 +71,7 @@ describe('xml', function() {
     describe('CDataValue', function() {
 
         it('should indicate if object is cdata value', cases([
-            [ new Object(), false ],
+            [ {}, false ],
             [ new xml.CDataValue('value'), true ]
         ], function (object, isCDataValue) {
             expect(xml.isCDataValue(object)).to.equal(isCDataValue);

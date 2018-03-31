@@ -1,7 +1,6 @@
 "use strict";
 
-var fs = require('fs'),
-    glob = require('glob'),
+var glob = require('glob'),
     _ = require('lodash');
 
 function expand() {
@@ -22,7 +21,7 @@ function expand() {
             })
         .map(function(x) { 
             return x.paths.map(function(path) { 
-                return { id: x.id, path: path, context: x.context }; })
+                return { id: x.id, path: path, context: x.context }; });
             })
         .flatten()
         .uniq(function(x) { return x.id + ':' + x.path; })

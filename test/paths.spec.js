@@ -27,11 +27,11 @@ describe('paths', function() {
 
             relative = function(file) {
                 return path.relative(basePath, file.path);
-            }
+            };
 
             absolute = function() {
                 return path.join.apply(null, [ basePath ].concat(_.toArray(arguments)));
-            }
+            };
         });
 
         after(function() {
@@ -99,7 +99,7 @@ describe('paths', function() {
         });
      
         it('should pass context with objects', function() {
-            var context = { path: absolute('a.*') }
+            var context = { path: absolute('a.*') };
             var files = paths.expand(context);
 
             expect(relative(files[0])).to.equal('a.xml');
