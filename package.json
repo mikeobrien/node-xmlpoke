@@ -37,10 +37,9 @@
     "touch": "0.0.3"
   },
   "dependencies": {
-    "glob": "^7.1.1",
-    "lodash": "^2.4.1",
-    "underscore.string": "^2.4.0",
+    "glob": "^7.1.2",
+    "lodash": "^3.10.1",
     "xmldom": "^0.1.27",
-    "xpath": "^0.0.24"
+    "xpath": "~0.0.27"
   }
 }

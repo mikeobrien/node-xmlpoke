@@ -4,8 +4,6 @@ var _ = require('lodash'),
     xmldom = require('xmldom'),
     xmlParser = new xmldom.DOMParser();
 
-_.mixin(require('underscore.string').exports());
-
 var ELEMENT_NODE = 1;
 var ATTRIBUTE_NODE = 2;
 
@@ -30,7 +28,7 @@ function parsePredicates(path) {
     var predicates = [], predicate;
     while ((predicate = regex.exec(path))) {
         predicates.push({
-            name: _.ltrim(_.trim(predicate[3]), '@'),
+            name: _.trimLeft(_.trim(predicate[3]), '@'),
             value: predicate[4],
             attribute: _.startsWith(_.trim(predicate[3]), '@')
         });
@@ -43,7 +41,7 @@ function parseXPath(path) {
     if (!segments) return null;
     var node = {
         path: _.trim(segments[1]),
-        name: _.ltrim(_.trim(segments[2]), '@'),
+        name: _.trimLeft(_.trim(segments[2]), '@'),
         attribute: _.startsWith(_.trim(segments[2]), '@'),
         keys: parsePredicates(segments[3])
     };
@@ -51,7 +49,7 @@ function parseXPath(path) {
 }
 
 function joinXPath(path1, path2) {
-    return path1 ? _.rtrim(path1, '/') + '/' + _.ltrim(path2, '/') : path2;
+    return path1 ? _.trimRight(path1, '/') + '/' + _.trimLeft(path2, '/') : path2;
 }
 
 function parseQualifiedName(name) {
@@ -134,9 +132,9 @@ function getChildElementsNamed(namespaces, nodes, name) {
             var results =
                 _.chain(x.childNodes)
                     .toArray()
-                    .where(function(x) {
-                        return x.nodeName == name &&
-                               x.nodeType == ELEMENT_NODE;
+                    .where({
+                        nodeName: name,
+                        nodeType: ELEMENT_NODE,
                     }).value();
             return results.length > 0 ? results :
                 addNode(namespaces, x, name);
