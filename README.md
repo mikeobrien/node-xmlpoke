@@ -278,6 +278,13 @@ xmlpoke('**/*.config', function(xml) {
     ...;
 });
 ```
+	
+Contributors
+------------
+
+| [![Raphael von der Grün](https://raw.githubusercontent.com/mikeobrien/node-xmlpoke/master/img/raphinesse.png)](https://github.com/raphinesse) |
+|:---:|
+| [Raphael von der Grün](https://github.com/raphinesse) | 
 
 ## License
 MIT License
